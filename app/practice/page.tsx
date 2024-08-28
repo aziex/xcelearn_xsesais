@@ -1,8 +1,9 @@
 import React from 'react';
-import Quiz from './quiz';
+import Quiz from './practice';
 import { Box, Typography } from '@mui/material';
+import Practice from './quiz1';
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       <Box>
@@ -10,9 +11,9 @@ const page = () => {
           Welcome to the Quiz
         </Typography>
       </Box>
-      <Quiz />
+      <Practice />
     </div>
   );
 };
 
-export default page;
+export default Page;

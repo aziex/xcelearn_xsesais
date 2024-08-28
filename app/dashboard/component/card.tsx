@@ -78,7 +78,7 @@ export default function RecipeReviewCard() {
           <ShareIcon />
         </IconButton>
 
-        <div style={{ flexGrow: 1 }}></div>
+        <div style={{ flex: 1 }}></div>
 
         <Button variant="contained" href="../practice">
           Start
