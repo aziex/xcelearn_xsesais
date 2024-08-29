@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Transition } from 'react-transition-group';
 import { styled } from '@mui/system';
-import ReplayIcon from '@mui/icons-material/Replay';
 import CloseIcon from '@mui/icons-material/Close';
 import { Snackbar } from '@mui/base/Snackbar';
 import { SnackbarCloseReason } from '@mui/base/useSnackbar';
@@ -103,7 +102,7 @@ export default function SimpleSnackbar({
 
   return (
     <StyledSnackbar
-      autoHideDuration={3000}
+      autoHideDuration={500}
       open={open}
       close={onClose}
       exited={exited}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
+import Button, { ButtonProps } from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -10,11 +10,25 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Box from '@mui/material/Box';
-import { Divider, IconButton, SnackbarContent } from '@mui/material';
+import { IconButton, styled } from '@mui/material';
 import SimpleSnackbar from './component/snackbar';
-import Alert from '@mui/material/Alert';
 import DrawIcon from '@mui/icons-material/Draw';
 import { Questions } from './data/questions';
+import Collapse from '@mui/material/Collapse';
+
+interface ExpandMoreProps extends ButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <Button {...other} />;
+})(({ theme, expand }) => ({
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
 const Practice: React.FC = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -25,39 +39,52 @@ const Practice: React.FC = () => {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [hasAttemptedIncorrectly, setHasAttemptedIncorrectly] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   const handleChoiceSelect = (index: number) => {
     setSelectedChoice(index);
   };
 
   const quiz = Questions.questions;
-  const { question, choices, answer } = quiz[currentQuestion];
+  const { question, choices, answer, answerscheme } = quiz[currentQuestion];
 
   const handleSubmit = () => {
     if (selectedChoice === null) return;
 
     if (selectedChoice === quiz[currentQuestion].answer) {
       if (!hasAttemptedIncorrectly) {
-        setScore(score + 1);
-        setSnackbarTitle('There you go!');
-        setSnackbarMessage('Keep it up!');
-      } else {
         setSnackbarTitle('You got it right!');
         setSnackbarMessage('Moving to the next question.');
-      }
-
-      if (currentQuestion < quiz.length - 1) {
-        setCurrentQuestion(currentQuestion + 1);
-        setSelectedChoice(null);
-        setHasAttemptedIncorrectly(false);
+        setOpenSnackbar(true);
+        setScore(score + 1);
+        setIsCorrect(true);
       } else {
-        setShowResult(true);
+        setSnackbarTitle('There you go!');
+        setSnackbarMessage('Keep it up!');
+        setOpenSnackbar(true);
+        setIsCorrect(true);
       }
     } else {
       setSnackbarTitle('Give it another shot!');
       setSnackbarMessage('Incorrect! Please try again.');
       setOpenSnackbar(true);
       setHasAttemptedIncorrectly(true);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestion < quiz.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedChoice(null);
+      setHasAttemptedIncorrectly(false);
+      setIsCorrect(false);
+    } else {
+      setShowResult(true);
     }
   };
 
@@ -85,7 +112,7 @@ const Practice: React.FC = () => {
               variant="contained"
               color="primary"
               onClick={handleRestart}
-              sx={{ marginTop: 2 }}
+              sx={{ marginTop: 2, textTransform: 'none' }}
             >
               Restart Practice
             </Button>
@@ -108,10 +135,6 @@ const Practice: React.FC = () => {
                       borderRadius: '15px',
                     }}
                   >
-                    {/* <ListItemText
-                      primary={`${questions[currentQuestion].alphabet[index]}: ${choice}`}
-                    /> */}
-
                     <ListItemText
                       primary={
                         <Box display="flex" alignItems="center">
@@ -137,7 +160,29 @@ const Practice: React.FC = () => {
                 </ListItem>
               ))}
             </List>
-
+            <Box>
+              {isCorrect ? (
+                <Box>
+                  <ExpandMore
+                    expand={expanded}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
+                    aria-label="show more"
+                  >
+                    <Button sx={{ textTransform: 'none' }}>
+                      Show Answer Scheme
+                    </Button>
+                  </ExpandMore>
+                  <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    <CardContent>
+                      <Typography paragraph>
+                        {quiz[currentQuestion].answerscheme}
+                      </Typography>
+                    </CardContent>
+                  </Collapse>
+                </Box>
+              ) : null}
+            </Box>
             <Box
               display="flex"
               justifyContent="space-between"
@@ -146,15 +191,35 @@ const Practice: React.FC = () => {
               <IconButton aria-label="drawing">
                 <DrawIcon />
               </IconButton>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-                disabled={selectedChoice === null}
-                sx={{ marginTop: 2, alignItems: 'flex-end' }}
-              >
-                Submit
-              </Button>
+
+              {isCorrect ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleNextQuestion}
+                  sx={{
+                    marginTop: 2,
+                    alignItems: 'flex-end',
+                    textTransform: 'none',
+                  }}
+                >
+                  Next question
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  disabled={selectedChoice === null}
+                  sx={{
+                    marginTop: 2,
+                    alignItems: 'flex-end',
+                    textTransform: 'none',
+                  }}
+                >
+                  Check
+                </Button>
+              )}
             </Box>
           </CardContent>
         )}

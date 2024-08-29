@@ -1,5 +1,4 @@
 import React from 'react';
-import Quiz from './practice';
 import { Box, Typography } from '@mui/material';
 import Practice from './quiz1';
 

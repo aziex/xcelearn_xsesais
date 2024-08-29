@@ -3,6 +3,7 @@ interface Question {
   question: string;
   alphabet: string[];
   choices: string[];
+  answerscheme: string;
   answer: number;
 }
 
@@ -17,6 +18,7 @@ export const Questions: {
       question: 'What is 2 + 2?',
       alphabet: ['A', 'B', 'C', 'D'],
       choices: ['3', '4', '5', '6'],
+      answerscheme: '2 + 2 = 4',
       answer: 1,
     },
     {
@@ -24,6 +26,7 @@ export const Questions: {
       question: 'What is 9-1?',
       alphabet: ['A', 'B', 'C', 'D'],
       choices: ['2', '1', '8', '7'],
+      answerscheme: '9 - 1 = 8',
       answer: 2,
     },
     {
@@ -32,6 +35,7 @@ export const Questions: {
         'Mary has 3 stamps and her sister has 2 stamps. How many stamps do they have together?',
       alphabet: ['A', 'B', 'C', 'D'],
       choices: ['5', '3', '2', '4'],
+      answerscheme: '3 + 2 = 5',
       answer: 0,
     },
     {
@@ -39,6 +43,7 @@ export const Questions: {
       question: 'Complete the missing number: 4, 5, __, 7, 8',
       alphabet: ['A', 'B', 'C', 'D'],
       choices: ['6', '7', '3', '1'],
+      answerscheme: '4, 5, 6, 7, 8',
       answer: 0,
     },
     {
@@ -46,6 +51,7 @@ export const Questions: {
       question: 'What month comes after April?',
       alphabet: ['A', 'B', 'C', 'D'],
       choices: ['January', 'May', 'March', 'February'],
+      answerscheme: 'January, February, March, April, May',
       answer: 1,
     },
   ],
