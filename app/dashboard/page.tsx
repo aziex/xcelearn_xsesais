@@ -1,13 +1,16 @@
 import React from 'react';
-import Card from './component/card';
 import Collection from './component/collection';
+import QuizComponent from './component/card';
+import ThemeProvider from '../theme'
 
-const page = () => {
+const Dashboard = () => {
   return (
     <div>
-      <Card />
+         <ThemeProvider>
+         <QuizComponent />
+        </ThemeProvider>
     </div>
   );
 };
 
-export default page;
+export default Dashboard;

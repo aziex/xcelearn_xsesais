@@ -10,11 +10,13 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Box from '@mui/material/Box';
-import { IconButton, styled } from '@mui/material';
+import { IconButton, PaginationItem, styled } from '@mui/material';
 import SimpleSnackbar from './component/snackbar';
 import DrawIcon from '@mui/icons-material/Draw';
 import { Questions } from './data/questions';
 import Collapse from '@mui/material/Collapse';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 interface ExpandMoreProps extends ButtonProps {
   expand: boolean;
@@ -93,6 +95,16 @@ const Practice: React.FC = () => {
     setSelectedChoice(null);
     setScore(0);
     setShowResult(false);
+    setExpanded(false);
+    setIsCorrect(false);
+    setHasAttemptedIncorrectly(false);
+  };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setCurrentQuestion(value - 1); // Adjust the index to be zero-based
   };
 
   return (
@@ -102,10 +114,13 @@ const Practice: React.FC = () => {
       alignItems="center"
       height="100vh"
     >
+      {/* <Box>
+        <StopWatch autoStart={true} />
+      </Box> */}
       <Card sx={{ maxWidth: 600, width: '100%', padding: 2 }}>
         {showResult ? (
           <CardContent>
-            <Typography variant="h5" component="div">
+            <Typography className="font-quiz" variant="h5" component="div">
               Your Score: {score} / {quiz.length}
             </Typography>
             <Button
@@ -146,7 +161,9 @@ const Practice: React.FC = () => {
                               justifyContent: 'center',
                               alignItems: 'center',
                               borderRadius: '50%',
-                              backgroundColor: '#e4e6eb', // Background color of the circle
+                              border: '2px solid #ababab',
+                              color: '#444444',
+                              backgroundColor: '#f9f9f9',
                               marginRight: 3,
                             }}
                           >
@@ -168,10 +185,9 @@ const Practice: React.FC = () => {
                     onClick={handleExpandClick}
                     aria-expanded={expanded}
                     aria-label="show more"
+                    sx={{ textTransform: 'none' }}
                   >
-                    <Button sx={{ textTransform: 'none' }}>
-                      Show Answer Scheme
-                    </Button>
+                    Show Answer Scheme
                   </ExpandMore>
                   <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
@@ -191,6 +207,34 @@ const Practice: React.FC = () => {
               <IconButton aria-label="drawing">
                 <DrawIcon />
               </IconButton>
+
+              <Stack spacing={2}>
+                <Pagination
+                  count={5} // Number of questions
+                  page={currentQuestion + 1} // Adjust for zero-based index
+                  onChange={handlePageChange}
+                  siblingCount={0}
+                  boundaryCount={1}
+                  variant="outlined"
+                  renderItem={(item) => (
+                    <PaginationItem
+                      {...item}
+                      component="div"
+                      sx={{
+                        '& .MuiPaginationItem-root': {
+                          backgroundColor: 'grey',
+                          color: 'transparent', // Hide the numbers
+                          borderRadius: '50%',
+                        },
+                        '& .Mui-selected': {
+                          backgroundColor: 'blue',
+                          color: 'transparent', // Hide the selected number
+                        },
+                      }}
+                    />
+                  )}
+                />
+              </Stack>
 
               {isCorrect ? (
                 <Button
